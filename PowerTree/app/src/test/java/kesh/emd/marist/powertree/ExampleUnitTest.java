@@ -1,4 +1,4 @@
-package entmobdev.marist.speck.powertree;
+package kesh.emd.marist.powertree;
 
 import org.junit.Test;
 

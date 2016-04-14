@@ -1,4 +1,4 @@
-package entmobdev.marist.speck.powertree;
+package kesh.emd.marist.powertree;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
