@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <EditText
+        android:id="@+id/edit_profilename"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:lines="1"
+        android:layout_weight=".32"/>
+    <!--
+    <EditText
+        android:id="@+id/edit_profiletitle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:lines="1"
+        android:layout_weight=".32"/> -->
+    <EditText
+        android:id="@+id/edit_profileemail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:lines="1"
+        android:layout_weight=".32"/>
+    <AutoCompleteTextView
+        android:id="@+id/edit_profiletitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/prompt_title"
+        android:inputType="text"
+        android:maxLines="1"
+        android:singleLine="true" />
+</LinearLayout>

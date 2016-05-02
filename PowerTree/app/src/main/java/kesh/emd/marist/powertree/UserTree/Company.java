@@ -6,6 +6,10 @@ package kesh.emd.marist.powertree.UserTree;
 public class Company {
     private int company;
     private String[] positions;
+    private Node companytree;
 
+    public Company(User president){
+        this.companytree=new Node(president);
+    }
 
 }
