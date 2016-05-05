@@ -30,7 +30,7 @@
         <activity android:name=".ProfileActivity"></activity>
         <activity android:name=".LoginActivity"></activity>
         <activity android:name=".TreeActivity"></activity>
-        <activity android:name=".Server.AndroidDatabaseManager"
+        <activity android:name=".AndroidDatabaseManager"
             android:theme="@style/Theme.AppCompat.Light"/>
     </application>
 

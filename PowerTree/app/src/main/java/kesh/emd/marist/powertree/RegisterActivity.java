@@ -13,7 +13,7 @@ import android.widget.EditText;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import kesh.emd.marist.powertree.Server.DBHandler;
+import kesh.emd.marist.powertree.UserTree.DBHandler;
 import kesh.emd.marist.powertree.UserTree.Profile;
 import kesh.emd.marist.powertree.UserTree.User;
 
@@ -49,9 +49,9 @@ public class RegisterActivity extends Activity{
             finish();
         }
         else {
-//            DBHandler dbHandler = new DBHandler(this, null, null, 1);
-//            dbHandler.populateDB();
-//            dbHandler.updateDB();
+            DBHandler dbHandler = new DBHandler(this, null, null, 1);
+            dbHandler.populateDB();
+            dbHandler.updateDB();
         }
 
 
