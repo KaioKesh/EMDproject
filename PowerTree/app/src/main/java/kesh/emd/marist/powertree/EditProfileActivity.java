@@ -16,7 +16,7 @@ import android.view.Window;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
-import kesh.emd.marist.powertree.Server.DBHandler;
+import kesh.emd.marist.powertree.UserTree.DBHandler;
 import kesh.emd.marist.powertree.UserTree.Profile;
 import kesh.emd.marist.powertree.UserTree.User;
 
