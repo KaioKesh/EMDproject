@@ -14,20 +14,32 @@ public class Profile {
     private String photofilepath;
     protected Bitmap userphoto;
 
+    public Profile(){
+    this.name = "Name was not set";
+    this.email = "Email was not set";
+    this.title = "Title was not set";
+    this.photofilepath = "";
+    }
     public Profile(String inname, String inemail){
         this.name = inname;
         this.email = inemail;
+        this.title = "Title was not set";
+        this.photofilepath = "";
     }
     public Profile(String inname, String inemail,String intitle){
         this.name = inname;
         this.email = inemail;
         this.title = intitle;
+        this.photofilepath = "";
     }
 
     public void setPhoto(Bitmap profilephoto) {
         this.userphoto = profilephoto;
     }
 
+    public void setPhoto(String filepath) {
+        this.photofilepath = filepath;
+    }
     public String getPhoto() {
         return this.photofilepath;
     }

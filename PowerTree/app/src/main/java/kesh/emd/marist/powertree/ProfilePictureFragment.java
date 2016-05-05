@@ -30,19 +30,7 @@ public class ProfilePictureFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View profilepictureview = inflater.inflate(R.layout.profile_picture, container, false);
         setHasOptionsMenu(true);
-        /*
-        Button buttonLoadImage = (Button)profilepictureview.findViewById(R.id.pictureButton);
-        profileImage = (ImageView)profilepictureview.findViewById(R.id.profileImage);
-
-        buttonLoadImage.setOnClickListener(new Button.OnClickListener(){
-            @Override
-            public void onClick(View arg0) {
-                // TODO Auto-generated method stub
-                Intent intent = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, RESULT_LOAD_IMAGE);
-            }});
-            */
+        ((ImageView) profilepictureview.findViewById(R.id.profileImage)).setImageResource(R.drawable.edit_profile);
         return profilepictureview;
     }
 

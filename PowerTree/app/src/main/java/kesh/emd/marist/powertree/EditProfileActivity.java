@@ -4,22 +4,21 @@ package kesh.emd.marist.powertree;
  * Created by Keshine on 4/20/2016.
  */
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
-import android.view.animation.Animation;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.ViewSwitcher;
+
+import kesh.emd.marist.powertree.Server.DBHandler;
+import kesh.emd.marist.powertree.UserTree.Profile;
+import kesh.emd.marist.powertree.UserTree.User;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -55,7 +54,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 String name = profilename.getText().toString();
                 String email = profileemail.getText().toString();
                 String title = profiletitle.getText().toString();
-                //database save
 
                 //sharedPreferences save
                 preferenceSettings = getSharedPreferences("user_info", Context.MODE_PRIVATE);
@@ -65,7 +63,16 @@ public class EditProfileActivity extends AppCompatActivity {
                 preferenceEditor.putString("title", title);
                 preferenceEditor.commit();
 
-                startActivity(new Intent(EditProfileActivity.this, ProfileActivity.class));
+                long userid = preferenceSettings.getLong("user", -1);
+                //database save
+                DBHandler dbHandler = new DBHandler(this, null, null, 1);
+                User thisuser = new User(userid);
+                thisuser.setProfile(new Profile(name,email,title));
+                dbHandler.editProfile(thisuser);
+
+                Intent saveintent = new Intent(this, ProfileActivity.class);
+                saveintent.putExtra("userid", userid);
+                this.startActivity (saveintent);
                 return true;
         }
         return false;

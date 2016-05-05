@@ -25,19 +25,23 @@ public class Node<User> {
     }
 
     public void setParent(Node<User> parent) {
-        parent.addChild(this);
         this.parent = parent;
+        parent.addChild(this);
     }
 
     public void addChild(User user) {
         Node<User> child = new Node<User>(user);
-        child.setParent(this);
-        this.children.add(child);
+        if(child.parent!=this) {
+            child.setParent(this);
+            this.children.add(child);
+        }
     }
-
+    //bugged?
     public void addChild(Node<User> child) {
-        child.setParent(this);
-        this.children.add(child);
+        if(child.parent!=this){
+            child.setParent(this);
+            this.children.add(child);
+        }
     }
 
     public User getUser() {

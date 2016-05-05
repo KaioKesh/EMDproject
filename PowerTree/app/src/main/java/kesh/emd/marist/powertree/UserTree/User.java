@@ -5,25 +5,19 @@ package kesh.emd.marist.powertree.UserTree;
  */
 //@todo look up Google account sync
 public class User {
-    private int accountid;
-    private int companyid;
+    private long accountid;
+    private long companyid;
     private Profile userprofile;
-    public User(int newaccountid){
+    public User(long newaccountid){
         //if ![accounts].contains(newaccountid)
-        accountid = newaccountid;
+        this.accountid = newaccountid;
+        this.companyid=-1;
+        this.userprofile=new Profile();
     }
-    public void createProfile(String username,String useremail){
-        this.userprofile = new Profile(username,useremail);
-    }
-    public void createProfile(String username,String useremail, String usertitle){
-        this.userprofile = new Profile(username,useremail,usertitle);
-    }
-    public int getUserid(){
+    public long getUserid(){
         return this.accountid;
     }
-    public int getCompanyid(){
-        return this.companyid;
-    }
+
     public void setProfile(Profile newprofile){
         this.userprofile = newprofile;
     }
@@ -39,8 +33,11 @@ public class User {
             return false;
         }
     }
-    public void setCompanyid(int newcompany){
+    public void setCompanyid(long newcompany){
         this.companyid=newcompany;
+    }
+    public long getCompanyid(){
+        return this.companyid;
     }
 
 

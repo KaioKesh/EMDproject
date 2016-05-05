@@ -32,7 +32,6 @@ public class EditProfilePictureFragment extends Fragment {
         buttonLoadImage.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View arg0) {
-                // TODO Auto-generated method stub
                 Intent intent = new Intent(Intent.ACTION_PICK,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, RESULT_LOAD_IMAGE);

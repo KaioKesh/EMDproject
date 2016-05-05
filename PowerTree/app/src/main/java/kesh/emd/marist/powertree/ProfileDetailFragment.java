@@ -6,17 +6,23 @@ package kesh.emd.marist.powertree;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import kesh.emd.marist.powertree.Server.DBHandler;
+import kesh.emd.marist.powertree.UserTree.Profile;
 
 public class ProfileDetailFragment extends Fragment {
     private SharedPreferences preferenceSettings;
+    //xml views
+    private TextView profilename;
+    private TextView profiletitle;
+    private TextView profileemail;
+
+    private long userid;
 
     public ProfileDetailFragment(){
 
@@ -35,16 +41,30 @@ public class ProfileDetailFragment extends Fragment {
         return profiledetailsview;
     }
 
-    //must be called after onAttach()
     private void setProfiletext(View v){
-        TextView profilename = (TextView)v.findViewById(R.id.profilename);
-        TextView profiletitle = (TextView)v.findViewById(R.id.profiletitle);
-        TextView profileemail = (TextView)v.findViewById(R.id.profileemail);
-
         preferenceSettings =this.getActivity().getSharedPreferences("user_info",Context.MODE_PRIVATE);
-        String name = preferenceSettings.getString("name","name not found");
-        String title = preferenceSettings.getString("title","job title not found");
-        String email = preferenceSettings.getString("email","email not found");
+        userid = ((ProfileActivity)this.getActivity()).getID();
+        long usercheck = preferenceSettings.getLong("user",-1);
+        String name;
+        String title;
+        String email;
+        if(userid == usercheck){
+            name = preferenceSettings.getString("name","name not found");
+            title = preferenceSettings.getString("title","job title not found");
+            email = preferenceSettings.getString("email","email not found");
+        }
+        else{
+            DBHandler dbHandler = new DBHandler(v.getContext(), null, null, 1);
+            Profile profile = dbHandler.getProfile(userid);
+            name = profile.getName();
+            title = profile.getTitle();
+            email = profile.getEmail();
+        }
+
+        profilename = (TextView)v.findViewById(R.id.profilename);
+        profiletitle = (TextView)v.findViewById(R.id.profiletitle);
+        profileemail = (TextView)v.findViewById(R.id.profileemail);
+
 
 
         profilename.setText(name);

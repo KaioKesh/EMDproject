@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import kesh.emd.marist.powertree.Server.DBHandler;
+import kesh.emd.marist.powertree.UserTree.Profile;
+import kesh.emd.marist.powertree.UserTree.User;
 
 /**
  * Created by Keshine on 4/27/2016.
@@ -32,13 +34,26 @@ public class RegisterActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        preferenceSettings = getSharedPreferences("user_info", Context.MODE_PRIVATE);
+
+//        preferenceSettings = getSharedPreferences("user_info", Context.MODE_PRIVATE);
+//        preferenceEditor=preferenceSettings.edit();
+//        preferenceEditor.clear();
+//        preferenceEditor.commit();
         if (isLoggedIn())
         {
-            Intent intent = new Intent(this, ProfileActivity.class);
+            Intent intent = new Intent(this, TreeActivity.class);
+            intent.putExtra("userid", preferenceSettings.getLong("user", -1));
+            intent.putExtra("loading", true);
+            intent.putExtra("loadingindex", 0);
             this.startActivity (intent);
-            this.finishActivity (0);
+            finish();
         }
+        else {
+//            DBHandler dbHandler = new DBHandler(this, null, null, 1);
+//            dbHandler.populateDB();
+//            dbHandler.updateDB();
+        }
+
 
         setContentView(R.layout.activity_register);
         emailEditText = (EditText) findViewById(R.id.register_email);
@@ -55,14 +70,17 @@ public class RegisterActivity extends Activity{
             public void onClick(View arg0) {
                 Boolean validated=true;
                 final String email = emailEditText.getText().toString();
-                if (!isValidEmail(email)) {
+                if(email.isEmpty()){
+                    emailEditText.setError("Email Required");
+                }
+                else if (!isValidEmail(email)) {
                     emailEditText.setError("Invalid Email");
                     validated=false;
                 }
 
                 final String name = nameEditText.getText().toString();
-                if (!isValidName(name)) {
-                    nameEditText.setError("Invalid Password");
+                if (name.isEmpty()) {
+                    nameEditText.setError("Name Required");
                     validated=false;
                 }
                 //@todo add validator so title is constrained to values
@@ -71,8 +89,12 @@ public class RegisterActivity extends Activity{
                     title = null;
                 }
                 if(validated){
-                    createAccount(name,email,title);
-                    startActivity(new Intent(RegisterActivity.this, ProfileActivity.class));
+                    long extra = createAccount(name,email,title);
+                    Intent profileIntent = new Intent(RegisterActivity.this, TreeActivity.class);
+                    profileIntent.putExtra("userid", extra);
+                    profileIntent.putExtra("loading", true);
+                    profileIntent.putExtra("loadingindex", 0);
+                    startActivity(profileIntent);
                     finish();
                 }
 
@@ -92,19 +114,25 @@ public class RegisterActivity extends Activity{
         return matcher.matches();
     }
 
-    // validating password with retype password
-    private boolean isValidName(String name) {
-        return name != null && name.matches("[a-zA-Z]+");
-    }
-
     //create new account and store it in sharedpreferences?, sqllite?
-    private void createAccount(String name, String email, String title){
+    private long createAccount(String name, String email, String title){
+
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        long id = dbHandler.addUser();
+        User newUser = new User(id);
+        newUser.setProfile(new Profile(name,email,title));
+        dbHandler.editProfile(newUser);
+        dbHandler.linkSup(id,1);
+
         preferenceSettings = getSharedPreferences("user_info", Context.MODE_PRIVATE);
         preferenceEditor = preferenceSettings.edit();
+        preferenceEditor.putLong("user",newUser.getUserid());
         preferenceEditor.putString("name",name);
         preferenceEditor.putString("email",email);
         preferenceEditor.putString("title",title);
         preferenceEditor.commit();
+
+        return id;
     }
 
     private Boolean isLoggedIn(){

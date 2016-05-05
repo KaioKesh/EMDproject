@@ -4,4 +4,7 @@
     <item android:id="@+id/menu_edit_profile"
         android:icon="@drawable/edit_profile"
         android:title="Edit Profile" />
+
+    <item android:id="@+id/view_database"
+        android:title="View Database" />
 </menu>
