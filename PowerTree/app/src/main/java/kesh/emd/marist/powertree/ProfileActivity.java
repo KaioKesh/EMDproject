@@ -14,7 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 
-import kesh.emd.marist.powertree.AndroidDatabaseManager;
+import kesh.emd.marist.powertree.Server.AndroidDatabaseManager;
 import kesh.emd.marist.powertree.UserTree.User;
 
 public class ProfileActivity extends AppCompatActivity {

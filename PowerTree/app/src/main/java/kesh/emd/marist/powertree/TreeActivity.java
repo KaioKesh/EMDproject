@@ -15,7 +15,7 @@ import android.widget.ImageButton;
 import java.util.ArrayList;
 import java.util.List;
 
-import kesh.emd.marist.powertree.UserTree.DBHandler;
+import kesh.emd.marist.powertree.Server.DBHandler;
 import kesh.emd.marist.powertree.UserTree.Node;
 import kesh.emd.marist.powertree.UserTree.User;
 

@@ -1,5 +1,5 @@
 //add your package name here example: package com.example.dbm;
-package kesh.emd.marist.powertree;
+package kesh.emd.marist.powertree.Server;
 //all required import files
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -29,8 +29,6 @@ import android.widget.TableRow;
 import android.widget.TableRow.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import kesh.emd.marist.powertree.UserTree.DBHandler;
 
 public class AndroidDatabaseManager extends Activity implements OnItemClickListener {
 

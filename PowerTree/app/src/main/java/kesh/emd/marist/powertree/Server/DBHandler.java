@@ -1,4 +1,4 @@
-package kesh.emd.marist.powertree.UserTree;
+package kesh.emd.marist.powertree.Server;
 
 /**
  * Created by Keshine on 5/1/2016.
@@ -17,6 +17,7 @@ import android.util.Log;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import kesh.emd.marist.powertree.UserTree.Node;
@@ -70,8 +71,6 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     public long addUser() {
-
-
         ContentValues uservalues = new ContentValues();
         uservalues.put(USER_COMPANY, -1);
         uservalues.put(USER_SUPERIOR, -1);
@@ -88,26 +87,44 @@ public class DBHandler extends SQLiteOpenHelper {
             Log.d("userinsert","rows not matching up");
         }
         db.close();
-
         return rowid;
-
     }
-    public void addUser(User user) {
-
+    public void addUser(long id) {
         ContentValues uservalues = new ContentValues();
-        uservalues.put(USER_COMPANY, user.getCompanyid());
+        uservalues.put(USER_ID, id);
+        uservalues.put(USER_COMPANY, -1);
         uservalues.put(USER_SUPERIOR, -1);
 
-        ContentValues values = new ContentValues();
-        Profile userprofile = user.getProfile();
-        values.put(PROFILE_NAME, userprofile.getName());
-        values.put(PROFILE_EMAIL, userprofile.getEmail());
-        values.put(PROFILE_TITLE, userprofile.getTitle());
+        ContentValues profilevalues = new ContentValues();
+        profilevalues.put(USER_ID, id);
+        profilevalues.put(PROFILE_NAME, "create name");
+        profilevalues.put(PROFILE_EMAIL, "create email");
+        profilevalues.put(PROFILE_TITLE, "choose title");
 
         SQLiteDatabase db = this.getWritableDatabase();
-        db.insert(TABLE_USERS, null, null);
-        db.insert(TABLE_PROFILES,null,values);
+        long rowid = db.insertOrThrow(TABLE_USERS, null, uservalues);
+        long rowidcheck = db.insertOrThrow(TABLE_PROFILES,null,profilevalues);
+        if(rowid!=rowidcheck){
+            Log.d("userinsert","rows not matching up");
+        }
         db.close();
+    }
+    public void insertUser(HashMap<String, String> queryValues) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues uservalues = new ContentValues();
+        uservalues.put(USER_ID, String.valueOf(queryValues.get("user_id")));
+        uservalues.put(USER_COMPANY, String.valueOf(queryValues.get("company_id")));
+        uservalues.put(USER_SUPERIOR, String.valueOf(queryValues.get("superior_id")));
+        database.insertOrThrow(TABLE_USERS, null, uservalues);
+
+        ContentValues profilevalues = new ContentValues();
+        profilevalues.put(USER_ID, String.valueOf(queryValues.get("user_id")));
+        profilevalues.put(PROFILE_NAME, queryValues.get("name"));
+        profilevalues.put(PROFILE_EMAIL, queryValues.get("email"));
+        profilevalues.put(PROFILE_TITLE, queryValues.get("title"));
+        database.insertOrThrow(TABLE_PROFILES, null, profilevalues);
+        database.close();
+
     }
     public void linkCompany(User user,long companyid) {
 
@@ -175,6 +192,7 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         db.close();
     }
+    //@todo function request new user has been set to put default superior as 1, find way to link user to placeholder user maybe when created
     public ArrayList<Long> superiorchain(long userid){
         getallUsers();
         long userindex = userids.indexOf(userid);
@@ -199,6 +217,16 @@ public class DBHandler extends SQLiteOpenHelper {
                 populate(child);
             }
         }
+    }
+    public void deleteUsers(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_USERS, null, null);
+        db.close();
+    }
+    public void deleteProfiles(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_PROFILES, null, null);
+        db.close();
     }
     public Node getUser(long userid){
         getallUsers();

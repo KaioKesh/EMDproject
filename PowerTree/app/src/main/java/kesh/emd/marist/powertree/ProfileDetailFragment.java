@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import kesh.emd.marist.powertree.UserTree.DBHandler;
+import kesh.emd.marist.powertree.Server.DBHandler;
 import kesh.emd.marist.powertree.UserTree.Profile;
 
 public class ProfileDetailFragment extends Fragment {
