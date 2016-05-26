@@ -92,12 +92,12 @@ public class LoadingActivity extends AppCompatActivity {
         //delete data from  all tables
         controller.deleteUsers();
         controller.deleteProfiles();
-        ArrayList<HashMap<String, String>> usersynclist;
-        usersynclist = new ArrayList<HashMap<String, String>>();
         // Create GSON object
         Gson gson = new GsonBuilder().create();
         try {
             // Extract JSON array from the response
+            //phpmyadmin removed password of connect account on computer reboot, if code fails with "Value <br of type java.lang.String cannot be converted to JSONArray"
+            //then try and change user password.
             JSONArray arr = new JSONArray(response);
             System.out.println(arr.length());
             // If no of array elements is not zero

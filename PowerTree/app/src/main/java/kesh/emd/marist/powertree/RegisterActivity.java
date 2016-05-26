@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -142,7 +143,7 @@ public class RegisterActivity extends Activity{
         newUser.setProfile(new Profile(newname,newemail,newtitle));
         dbHandler.editProfile(newUser);
         dbHandler.linkSup(newid,1);
-        //uploadProfile(name, email , title);
+        uploadProfile();
 
         preferenceSettings = getSharedPreferences("user_info", Context.MODE_PRIVATE);
         preferenceEditor = preferenceSettings.edit();
@@ -162,19 +163,18 @@ public class RegisterActivity extends Activity{
     public String strprofiletojson(String name, String email, String title){
         Gson gson = new GsonBuilder().create();
         HashMap<String, String> map = new HashMap<String, String>();
+        ArrayList<HashMap<String, String>> jsonarray = new ArrayList<>();
         // Add status for each User in Hashmap
+        map.put("id",String.valueOf(newid));
         map.put("name", name);
         map.put("email", email);
         map.put("title", title);
-        return gson.toJson(map);
+        jsonarray.add(map);
+        return gson.toJson(jsonarray);
     }
     public long requestNewUser() {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
-        final ProgressDialog prgDialog = new ProgressDialog(this);
-        prgDialog.setMessage("Creating account...");
-        prgDialog.setCancelable(false);
-        prgDialog.show();
         client.post("http://10.0.2.2:80/mysqllitesync/requestnewid.php", params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] header, byte[]response) {
@@ -184,7 +184,7 @@ public class RegisterActivity extends Activity{
                     strresponse= new String(response, "UTF-8");  // Best way to decode using "UTF-8"
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
-                    strresponse = "[{'FUCK THIS SHIT'}]";
+                    strresponse = "[{'not getting a string?'}]";
                 }
                 try{
                     JSONObject responseobj = new JSONObject(strresponse);
@@ -206,33 +206,22 @@ public class RegisterActivity extends Activity{
         });
         return newid;
     }
-    public void uploadProfile(String name, String email, String title) {
+    public void uploadProfile() {
+        String json = strprofiletojson(newname,newemail,newtitle);
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
-        params.put("name", name);
-        params.put("email", email);
-        params.put("title", title);
+        params.put("profile", json);
         client.post("http://10.0.2.2:80/mysqllitesync/updateprofile.php", params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] header, byte[] response) {
-                try {
-                    String strresponse= new String(response, "UTF-8");  // Best way to decode using "UTF-8"
-                    newid= Long.parseLong(strresponse);
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                Toast.makeText(getApplicationContext(),	"New User Created", Toast.LENGTH_LONG).show();
+
             }
-
-
             @Override
             public void onFailure(int statusCode, Header[] header, byte[] response, Throwable error) {
                 Toast.makeText(getApplicationContext(), "Error Occured", Toast.LENGTH_LONG).show();
             }
         });
-
     }
-
     private Boolean isLoggedIn(){
         preferenceSettings = getSharedPreferences("user_info", Context.MODE_PRIVATE);
         return preferenceSettings.contains("name");

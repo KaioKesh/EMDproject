@@ -15,7 +15,18 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import cz.msebera.android.httpclient.Header;
 import kesh.emd.marist.powertree.Server.DBHandler;
 import kesh.emd.marist.powertree.UserTree.Profile;
 import kesh.emd.marist.powertree.UserTree.User;
@@ -69,6 +80,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 User thisuser = new User(userid);
                 thisuser.setProfile(new Profile(name,email,title));
                 dbHandler.editProfile(thisuser);
+                String json = strprofiletojson(name,email,title,userid);
+                uploadProfile(json);
 
                 Intent saveintent = new Intent(this, ProfileActivity.class);
                 saveintent.putExtra("userid", userid);
@@ -76,5 +89,33 @@ public class EditProfileActivity extends AppCompatActivity {
                 return true;
         }
         return false;
+    }
+    public String strprofiletojson(String name, String email, String title,long userid){
+        Gson gson = new GsonBuilder().create();
+        HashMap<String, String> map = new HashMap<String, String>();
+        ArrayList<HashMap<String, String>> jsonarray = new ArrayList<>();
+        // Add status for each User in Hashmap
+        map.put("id",String.valueOf(userid));
+        map.put("name", name);
+        map.put("email", email);
+        map.put("title", title);
+        jsonarray.add(map);
+        return gson.toJson(jsonarray);
+    }
+    public void uploadProfile(String json) {
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.put("profile", json);
+        client.post("http://10.0.2.2:80/mysqllitesync/updateprofile.php", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] header, byte[] response) {
+                Toast.makeText(getApplicationContext(),	"Profile updated", Toast.LENGTH_LONG).show();
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] header, byte[] response, Throwable error) {
+                Toast.makeText(getApplicationContext(), "Error Occured", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
